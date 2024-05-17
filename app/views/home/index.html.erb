@@ -1,0 +1,163 @@
+<style>
+  body{
+    font-size: 50%;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  /* Style for table headers */
+  th {
+    text-align: center;
+    background-color: #FC4100;
+    color: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  td {
+    padding-right: 10px;
+    padding-left: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+    word-wrap: break-word;
+    max-width: 300px;
+    max-height: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  td a {
+    text-decoration: none;
+    color: inherit;
+  }
+</style>
+<table>
+  <thead>
+    <tr>
+      <th style="background-color:#FFC100" >Objectives</th>
+      <th>Software</th>
+      <% current_year = Date.current.year %>
+      <% (2024..2031).each do |year| %>
+        <th><%= year %></th>
+      <% end %>
+      <th style="background-color:#03AED2" >Key Results</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% Software.all.each do |software| %>
+      <tr style="background-color:#DFF5FF">
+        <td><div style="background-color:white;padding:5px;border-radius:10%;height:20%;"><%= software.objective %><div></td>
+        <td><%= software.name %></td>
+
+        <% (2024..2031).each do |year| %>
+          <td data-software-id="<%= software.id %>" data-year="<%= year %>">
+            <% notes = Note.where(software_id: software.id, year: year) %>
+            <%if notes.present? %>
+            <% notes.each do |note| %>
+
+              <a data-bs-toggle="modal" data-bs-target="#note<%= note.id %>" style="cursor: pointer; position: relative; display: inline-block;">
+    <% if note.activity.symbol.attached? %>
+      <div style="position: absolute; bottom: 25%; left: 0; width: 100%;font-size:30%;">
+        <b><%= note.short_notation %></b>
+      </div>
+      <%= image_tag note.activity.symbol, style:"height:25px;" %>
+    <% end %>
+  </a>
+
+<div class="modal fade" id="note<%= note.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLabel"><%= note.activity.name %> : <%= note.year %></h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <%= render 'notes/form', note: note %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% end %>
+
+<% else %>
+              <a data-bs-toggle="modal" data-bs-target="#note<%= software.id %>_<%= year %>" class="empty-cell-link" style="cursor: pointer;color:#DFF5FF;padding:70px;">IIIIIIIIII</a>
+
+              <div class="modal fade" id="note<%= software.id %>_<%= year %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h6 class="modal-title" id="exampleModalLabel">New note for <%= year %></h6>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <% new_note = Note.new(software_id: software.id, year: year) %>
+                    <div class="modal-body">
+                      <%= form_with(model: new_note, remote: true) do |form| %>
+
+<div>
+    <% form.label :software_id, style: "display: block" %>
+    <% form.text_field :software_id %>
+  </div>
+
+  <div>
+    <% form.label :year, style: "display: block" %>
+    <% form.text_field :year %>
+  </div>
+
+  <div>
+    <%= form.label :short_notation, style: "display: block" %>
+    <%= form.text_field :short_notation %>
+  </div>
+
+  <div>
+    <%= form.label :subsoftware_id, style: "display: block" %>
+    <%= form.collection_select :subsoftware_id, Subsoftware.where(software_id: software.id), :id, :name, { prompt: "Select Subsoftware" }, { style: "display: block" } %>
+  </div> 
+
+  <div>
+    <%= form.label :activity_id, style: "display: block" %>
+    <%= form.collection_select :activity_id, Activity.all, :id, :name, { prompt: "Select Type" }, { style: "display: block" } %>
+  </div>
+
+  <div>
+    <%= form.submit style:"background-color: #6AD4DD; border: 1px solid black; border-radius:5px;margin-top:2px;" %>
+  </div>
+<% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </td></a>
+        <% end %>
+        <td style="background-color:#03AED2;"><div style="background-color:white;padding:5px;border-radius:10%;height:20%;"><%= software.key_result %>
+         <button type="button" class="chartsButton" style="background-color: #6AD4DD; border: 1px solid black; border-radius:5px;margin-top:2px;" data-bs-toggle="modal" data-bs-target="#charts<%= software.id %>">Charts</button>
+        <div></td>
+      </tr>
+
+
+<div class="modal fade" id="charts<%= software.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLabel"><%= software.name %> : Key Results </h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <% software.results.each do |result| %>
+            <%= image_tag result, height:"200px"%>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,42 @@
+<%= form_with(model: subsoftware) do |form| %>
+  <% if subsoftware.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(subsoftware.errors.count, "error") %> prohibited this subsoftware from being saved:</h2>
+
+      <ul>
+        <% subsoftware.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :esats_id, style: "display: block" %>
+    <%= form.number_field :esats_id %>
+  </div>
+
+  <div>
+    <%= form.label :version, style: "display: block" %>
+    <%= form.text_field :version %>
+  </div>
+
+  <div>
+    <%= form.label :standard_scope, style: "display: block" %>
+    <%= form.text_field :standard_scope %>
+  </div>
+
+  <div>
+    <%= form.label :software_id, style: "display: block" %>
+    <%= form.text_field :software_id %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

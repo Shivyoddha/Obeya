@@ -1,0 +1,42 @@
+<%= form_with(model: note, remote: true) do |form| %>
+  <% if note.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(note.errors.count, "error") %> prohibited this note from being saved:</h2>
+
+      <ul>
+        <% note.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <% form.label :software_id, style: "display: block" %>
+    <% form.text_field :software_id %>
+  </div>
+
+  <div>
+    <% form.label :year, style: "display: block" %>
+    <% form.text_field :year %>
+  </div>
+
+  <div>
+    <%= form.label :short_notation, style: "display: block" %>
+    <%= form.text_field :short_notation %>
+  </div>
+
+  <div>
+    <%= form.label :subsoftware_id, style: "display: block" %>
+    <%= form.collection_select :subsoftware_id, Subsoftware.where(software_id: 1), :id, :name, { prompt: "Select Subsoftware" }, { style: "display: block" } %>
+  </div> 
+
+  <div>
+    <%= form.label :activity_id, style: "display: block" %>
+    <%= form.collection_select :activity_id, Activity.all, :id, :name, { prompt: "Select Type" }, { style: "display: block" } %>
+  </div>
+
+  <div>
+    <%= form.submit style:"background-color: #6AD4DD; border: 1px solid black; border-radius:5px;margin-top:2px;" %>
+  </div>
+<% end %>

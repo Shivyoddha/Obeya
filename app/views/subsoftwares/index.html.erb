@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Subsoftwares</h1>
+
+<div id="subsoftwares">
+  <% @subsoftwares.each do |subsoftware| %>
+    <%= render subsoftware %>
+    <p>
+      <%= link_to "Show this subsoftware", subsoftware %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New subsoftware", new_subsoftware_path %>

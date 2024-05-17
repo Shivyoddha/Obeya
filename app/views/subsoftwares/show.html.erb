@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @subsoftware %>
+
+<div>
+  <%= link_to "Edit this subsoftware", edit_subsoftware_path(@subsoftware) %> |
+  <%= link_to "Back to subsoftwares", subsoftwares_path %>
+
+  <%= button_to "Destroy this subsoftware", @subsoftware, method: :delete %>
+</div>
