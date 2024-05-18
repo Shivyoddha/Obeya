@@ -1,42 +1,61 @@
-<%= form_with(model: note, remote: true) do |form| %>
-  <% if note.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(note.errors.count, "error") %> prohibited this note from being saved:</h2>
+<style>
+    .form-buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    .btn-danger {
+      background-color: #dc3545;
+      color: white;
+    }
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+</style>
+  <%= form_with(model: note, remote: true) do |form| %>
+    <table>
+      <tr>
+        <td><%= form.label :short_notation, "Short Notation:", class: "form-control", style: "border:none;" %></td>
+        <td><%= form.text_field :short_notation, class: "form-control" %></td>
+      </tr>
+      <tr>
+        <td><%= form.label :subsoftware_id, "Subsoftware:", class: "form-control", style: "border:none;" %></td>
+        <td><%= form.collection_select :subsoftware_id, Subsoftware.where(software_id: 1), :id, :name, { prompt: "Select Subsoftware" }, { class: "form-select" } %></td>
+      </tr>
+      <tr>
+        <td><%= form.label :activity_id, "Activity Type:", class: "form-control", style: "border:none;" %></td>
+        <td><%= form.collection_select :activity_id, Activity.all, :id, :name, { prompt: "Select Type" }, { class: "form-select" } %></td>
+      </tr>
+      <tr style="display:none;">
+        <td><%= form.label :software_id, "Software:", class: "form-control" %></td>
+        <td><%= form.collection_select :software_id, Software.all, :id, :name, { prompt: "Select Software" }, { class: "form-select" } %></td>
+      </tr>
+      <tr style="display:none;">
+        <td><%= form.label :year, "Year:" %></td>
+        <td><%= form.text_field :year, class: "form-control" %></td>
+      </tr>
+    </table>
 
-      <ul>
-        <% note.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+    <div class="form-buttons">
+      <%= form.submit "Submit", class: "btn btn-primary" %>
+      <% if !note.new_record? %>
+        <%= button_to "Delete", note, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger", form: { data: { turbo: false } } %>
+      <% end %>
     </div>
   <% end %>
-
-  <div>
-    <% form.label :software_id, style: "display: block" %>
-    <% form.text_field :software_id %>
-  </div>
-
-  <div>
-    <% form.label :year, style: "display: block" %>
-    <% form.text_field :year %>
-  </div>
-
-  <div>
-    <%= form.label :short_notation, style: "display: block" %>
-    <%= form.text_field :short_notation %>
-  </div>
-
-  <div>
-    <%= form.label :subsoftware_id, style: "display: block" %>
-    <%= form.collection_select :subsoftware_id, Subsoftware.where(software_id: 1), :id, :name, { prompt: "Select Subsoftware" }, { style: "display: block" } %>
-  </div> 
-
-  <div>
-    <%= form.label :activity_id, style: "display: block" %>
-    <%= form.collection_select :activity_id, Activity.all, :id, :name, { prompt: "Select Type" }, { style: "display: block" } %>
-  </div>
-
-  <div>
-    <%= form.submit style:"background-color: #6AD4DD; border: 1px solid black; border-radius:5px;margin-top:2px;" %>
-  </div>
-<% end %>

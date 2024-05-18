@@ -1,163 +1,194 @@
-<style>
-  body{
-    font-size: 50%;
-  }
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    table-layout: fixed;
-  }
+<%= stylesheet_link_tag "index" %>
+    <!-- Triangular Button -->
+    <div class="triangle-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></div>
 
-  /* Style for table headers */
-  th {
-    text-align: center;
-    background-color: #FC4100;
-    color: white;
-    padding: 10px;
-    border: 1px solid #ddd;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  td {
-    padding-right: 10px;
-    padding-left: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-    vertical-align: middle;
-    word-wrap: break-word;
-    max-width: 300px;
-    max-height: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  td a {
-    text-decoration: none;
-    color: inherit;
-  }
-</style>
-<table>
-  <thead>
-    <tr>
-      <th style="background-color:#FFC100" >Objectives</th>
-      <th>Software</th>
-      <% current_year = Date.current.year %>
-      <% (2024..2031).each do |year| %>
-        <th><%= year %></th>
-      <% end %>
-      <th style="background-color:#03AED2" >Key Results</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% Software.all.each do |software| %>
-      <tr style="background-color:#DFF5FF">
-        <td><div style="background-color:white;padding:5px;border-radius:10%;height:20%;"><%= software.objective %><div></td>
-        <td><%= software.name %></td>
-
-        <% (2024..2031).each do |year| %>
-          <td data-software-id="<%= software.id %>" data-year="<%= year %>">
-            <% notes = Note.where(software_id: software.id, year: year) %>
-            <%if notes.present? %>
-            <% notes.each do |note| %>
-
-              <a data-bs-toggle="modal" data-bs-target="#note<%= note.id %>" style="cursor: pointer; position: relative; display: inline-block;">
-    <% if note.activity.symbol.attached? %>
-      <div style="position: absolute; bottom: 25%; left: 0; width: 100%;font-size:30%;">
-        <b><%= note.short_notation %></b>
-      </div>
-      <%= image_tag note.activity.symbol, style:"height:25px;" %>
-    <% end %>
-  </a>
-
-<div class="modal fade" id="note<%= note.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h6 class="modal-title" id="exampleModalLabel"><%= note.activity.name %> : <%= note.year %></h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <%= render 'notes/form', note: note %>
-      </div>
+    <!-- Offcanvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel">Symbol Table</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Symbol</th>
+                        <th scope="col">Short Notation</th>
+                        <th scope="col">Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% Activity.all.each do |activity| %>
+                    <tr>
+                        <td><%= image_tag activity.symbol, width: "20px" %></td>
+                        <td><%= activity.short_notation %></td>
+                        <td><%= activity.name %></td>
+                    </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel">Scope Table</h5>
+        </div>
+        <div class="offcanvas-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Colour</th>
+                        <th scope="col">Scope</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="color-circle" style="background-color: red;"></span></td>
+                        <td>Not standard</td>
+                    </tr>
+                    <tr>
+                        <td><span class="color-circle" style="background-color: yellow;"></span></td>
+                        <td>Conditional</td>
+                    </tr>
+                    <tr>
+                        <td><span class="color-circle" style="background-color: green;"></span></td>
+                        <td>Standard</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+         <!-- Logout Button -->
+    <div class="offcanvas-body d-flex flex-column justify-content-end">
+        <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: 'btn btn-danger btn-block w-100' %>
     </div>
-  </div>
-</div>
+    </div>
 
-<% end %>
-
-<% else %>
-              <a data-bs-toggle="modal" data-bs-target="#note<%= software.id %>_<%= year %>" class="empty-cell-link" style="cursor: pointer;color:#DFF5FF;padding:70px;">IIIIIIIIII</a>
-
-              <div class="modal fade" id="note<%= software.id %>_<%= year %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h6 class="modal-title" id="exampleModalLabel">New note for <%= year %></h6>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Table -->
+    <table>
+        <thead>
+            <tr>
+                <th style="background-color:#FFC100">Objectives</th>
+                <th>Software</th>
+                <% current_year = Date.current.year %>
+                <% (2024..2031).each do |year| %>
+                    <th><%= year %></th>
+                <% end %>
+                <th style="background-color:#03AED2">Key Results</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% Software.all.each do |software| %>
+                <tr style="background-color:#DFF5FF">
+                    <td>
+                        <div style="background-color:white;padding:5px;border-radius:10%;height:20%;">
+                            <%= software.objective %>
+                        </div>
+                    </td>
+                    <td style="font-size:10px;">
+                      <% if software.scope == "Not Standard" %>
+                        <span class="color-circle1" style="background-color: red;"></span>
+                      <% elsif software.scope == "Conditional" %>
+                        <span class="color-circle1" style="background-color: yellow;"></span>
+                      <% elsif software.scope == "Standard" %>
+                        <span class="color-circle1" style="background-color: green;"></span>
+                      <% else %>
+                        <span class="color-circle1" style="background-color: grey;"></span>
+                      <% end %>
+                        <%= software.name %>
+                        <span class="esats_no"><%= software.esats_no %></span>
+                    </td>
+                    <% (2024..2031).each do |year| %>
+                        <td data-software-id="<%= software.id %>" data-year="<%= year %>">
+                            <% notes = Note.where(software_id: software.id, year: year) %>
+                            <% if notes.present? %>
+                              <span class="new-note-on-existing"><a data-bs-toggle="modal" data-bs-target="#note<%= software.id %>_<%= year %>" class="empty-cell-link" style="cursor: pointer;"><i class="bi bi-plus-square-fill" style="font-size: 10px;"></i></a></span>
+                              <div class="modal fade" id="note<%= software.id %>_<%= year %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h6 class="modal-title" id="exampleModalLabel">New note for <%= year %></h6>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <% new_note = Note.new(software_id: software.id, year: year) %>
+                                            <div class="modal-body">
+                                                <%= render 'notes/form', note: new_note %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% notes.each do |note| %>
+                                    <a data-bs-toggle="modal" data-bs-target="#note<%= note.id %>" style="cursor: pointer; position: relative; display: inline-block;">
+                                        <% if note.activity.symbol.attached? %>
+                                            <div style="position: absolute; bottom: 25%; left: 0; width: 100%;font-size:30%;">
+                                                <b><%= note.short_notation %></b>
+                                            </div>
+                                            <%= image_tag note.activity.symbol, style: "height:25px;" %>
+                                        <% end %>
+                                    </a>
+                                    <div class="modal fade" id="note<%= note.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h6 class="modal-title" id="exampleModalLabel"><%= note.activity.name %> : <%= note.year %></h6>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <%= render 'notes/form', note: note %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% end %>
+                            <% else %>
+                                <a data-bs-toggle="modal" data-bs-target="#note<%= software.id %>_<%= year %>" class="empty-cell-link" style="cursor: pointer; color:#DFF5FF; padding:70px;">IIIIIIIIII</a>
+                                <div class="modal fade" id="note<%= software.id %>_<%= year %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h6 class="modal-title" id="exampleModalLabel">New note for <%= year %></h6>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <% new_note = Note.new(software_id: software.id, year: year) %>
+                                            <div class="modal-body">
+                                                <%= render 'notes/form', note: new_note %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% end %>
+                        </td>
+                    <% end %>
+                    <td style="background-color:#03AED2;">
+                        <div style="background-color:white;padding:5px;border-radius:10%;height:20%;">
+                            <%= software.key_result %>
+                            <button type="button" class="chartsButton" style="background-color: #6AD4DD; border: 1px solid black; border-radius:5px; margin-top:2px;" data-bs-toggle="modal" data-bs-target="#charts<%= software.id %>">Charts</button>
+                        </div>
+                    </td>
+                </tr>
+                <div class="modal fade" id="charts<%= software.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="exampleModalLabel"><%= software.name %> : Key Results </h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <% software.results.each do |result| %>
+                                    <%= image_tag result, height:"200px" %>
+                                <% end %>
+                            </div>
+                        </div>
                     </div>
-                    <% new_note = Note.new(software_id: software.id, year: year) %>
-                    <div class="modal-body">
-                      <%= form_with(model: new_note, remote: true) do |form| %>
-
-<div>
-    <% form.label :software_id, style: "display: block" %>
-    <% form.text_field :software_id %>
-  </div>
-
-  <div>
-    <% form.label :year, style: "display: block" %>
-    <% form.text_field :year %>
-  </div>
-
-  <div>
-    <%= form.label :short_notation, style: "display: block" %>
-    <%= form.text_field :short_notation %>
-  </div>
-
-  <div>
-    <%= form.label :subsoftware_id, style: "display: block" %>
-    <%= form.collection_select :subsoftware_id, Subsoftware.where(software_id: software.id), :id, :name, { prompt: "Select Subsoftware" }, { style: "display: block" } %>
-  </div> 
-
-  <div>
-    <%= form.label :activity_id, style: "display: block" %>
-    <%= form.collection_select :activity_id, Activity.all, :id, :name, { prompt: "Select Type" }, { style: "display: block" } %>
-  </div>
-
-  <div>
-    <%= form.submit style:"background-color: #6AD4DD; border: 1px solid black; border-radius:5px;margin-top:2px;" %>
-  </div>
-<% end %>
-                    </div>
-                  </div>
                 </div>
-              </div>
             <% end %>
-          </td></a>
-        <% end %>
-        <td style="background-color:#03AED2;"><div style="background-color:white;padding:5px;border-radius:10%;height:20%;"><%= software.key_result %>
-         <button type="button" class="chartsButton" style="background-color: #6AD4DD; border: 1px solid black; border-radius:5px;margin-top:2px;" data-bs-toggle="modal" data-bs-target="#charts<%= software.id %>">Charts</button>
-        <div></td>
-      </tr>
-
-
-<div class="modal fade" id="charts<%= software.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h6 class="modal-title" id="exampleModalLabel"><%= software.name %> : Key Results </h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <% software.results.each do |result| %>
-            <%= image_tag result, height:"200px"%>
-        <% end %>
-      </div>
-    </div>
-  </div>
-</div>
-    <% end %>
-  </tbody>
-</table>
+        </tbody>
+    </table>
+<script>
+    function switchMode(mode) {
+        if (mode === 'view') {
+            document.getElementById('viewMode').style.display = 'block';
+            document.getElementById('editMode').style.display = 'none';
+        } else if (mode === 'edit') {
+            document.getElementById('viewMode').style.display = 'none';
+            document.getElementById('editMode').style.display = 'block';
+        }
+    }
+</script>

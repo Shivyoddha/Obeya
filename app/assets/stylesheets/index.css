@@ -1,0 +1,109 @@
+body {
+    font-size: 50%;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+th {
+    text-align: center;
+    background-color: #FC4100;
+    color: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+td {
+    padding-right: 10px;
+    padding-left: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+    word-wrap: break-word;
+    max-width: 300px;
+    max-height: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative; 
+}
+td a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.triangle-btn {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 30px solid transparent;
+    border-bottom: 30px solid transparent;
+    border-right: 30px solid #007bff;
+    cursor: pointer;
+}
+
+.triangle-btn::before {
+    content: 'B';
+    position: absolute;
+    left: 7px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 40px;
+    color: white;
+    transition: color 0.3s;
+}
+
+.triangle-btn:hover {
+    border-right-color: #0056b3;
+    content: 'B';
+}
+
+.triangle-btn:hover::before {
+    content: 'BOEING';
+    color: #cce5ff;
+    left: -150px;
+    right: 20px;
+}
+
+.offcanvas {
+    font-size: 10px;
+}
+
+.color-circle {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.color-circle1 {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.esats_no {
+    display: inline-block;
+    font-size: 7px;
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+}
+
+.new-note-on-existing {
+    display: inline-block;
+    font-size: 7px;
+    position: absolute;
+    bottom: 0px;
+    right: 3px;
+    color: #6DC5D1;
+}

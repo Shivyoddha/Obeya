@@ -78,3 +78,5 @@ group :test do
 
 end
 gem "sassc-rails"
+
+gem "devise", "~> 4.9"
