@@ -1,11 +1,20 @@
 <style>
     .form-buttons {
       margin-top: 20px;
+      margin-right: 20px;
       display: flex;
-      gap: 10px;
+      flex-direction: row;
+      padding: 0px;
       justify-content: center;
       align-items: center;
     }
+
+    .parent {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+
     .btn {
       padding: 10px 20px;
       font-size: 16px;
@@ -51,11 +60,15 @@
         <td><%= form.text_field :year, class: "form-control" %></td>
       </tr>
     </table>
-
+<div class="parent">
     <div class="form-buttons">
       <%= form.submit "Submit", class: "btn btn-primary" %>
-      <% if !note.new_record? %>
-        <%= button_to "Delete", note, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger", form: { data: { turbo: false } } %>
-      <% end %>
     </div>
   <% end %>
+
+ <div class="form-buttons">
+    <% if !note.new_record? %>
+      <%= button_to "Delete", note, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger", form: { data: { turbo: false } } %>
+    <% end %>
+  </div>
+</div>
