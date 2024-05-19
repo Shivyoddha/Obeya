@@ -79,8 +79,11 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
-production:
-  <<: *default
-  database: Obeya_1_production
-  username: Obeya_1
-  password: <%= ENV["OBEYA_1_DATABASE_PASSWORD"] %>
+# production:
+#   <<: *default
+#   database: Obeya_1_production
+#   username: Obeya_1
+#   password: <%= ENV["OBEYA_1_DATABASE_PASSWORD"] %>
+production: 
+     <<: *default
+     url: <%= ENV['DATABASE_URL'] %> # ENTER THIS *EXACTLY* AS THIS, THIS READS THE VALUE OF THE DATABASE_URL environment variable programatically
