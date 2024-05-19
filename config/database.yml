@@ -86,4 +86,4 @@ test:
 #   password: <%= ENV["OBEYA_1_DATABASE_PASSWORD"] %>
 production: 
      <<: *default
-     url: <%= ENV['DATABASE_URL'] %> # ENTER THIS *EXACTLY* AS THIS, THIS READS THE VALUE OF THE DATABASE_URL environment variable programatically
+     database: Obeya_1_production
