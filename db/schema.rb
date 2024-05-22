@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_18_113821) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_17_131717) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -39,24 +39,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_18_113821) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "activities", force: :cascade do |t|
-    t.string "name"
-    t.string "short_notation"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "notes", force: :cascade do |t|
     t.string "year"
     t.integer "software_id", null: false
     t.integer "subsoftware_id", null: false
+    t.integer "type_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "activity_id"
-    t.string "short_notation"
-    t.index ["activity_id"], name: "index_notes_on_activity_id"
     t.index ["software_id"], name: "index_notes_on_software_id"
     t.index ["subsoftware_id"], name: "index_notes_on_subsoftware_id"
+    t.index ["type_id"], name: "index_notes_on_type_id"
   end
 
   create_table "softwares", force: :cascade do |t|
@@ -66,7 +58,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_18_113821) do
     t.datetime "updated_at", null: false
     t.string "key_result"
     t.string "objective"
-    t.string "scope"
   end
 
   create_table "subsoftwares", force: :cascade do |t|
@@ -80,13 +71,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_18_113821) do
     t.index ["software_id"], name: "index_subsoftwares_on_software_id"
   end
 
-# Could not dump table "users" because of following StandardError
-#   Unknown type 'bool' for column 'is_admin'
-
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "notes", "activities"
   add_foreign_key "notes", "softwares"
   add_foreign_key "notes", "subsoftwares"
+  add_foreign_key "notes", "types"
   add_foreign_key "subsoftwares", "softwares"
 end
